@@ -51,17 +51,20 @@ func (h *Handler) CreateSubscription(w http.ResponseWriter, r *http.Request) {
 	var req dto.SubscriptionDTO
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		log.Error(err.Error())
 		http.Error(w, "invalid JSON", http.StatusBadRequest)
 		return
 	}
 
 	sub, err := dto.DTOToSubscription(&req)
 	if err != nil {
+		log.Error(err.Error())
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	if err := h.SubRepo.Create(sub); err != nil {
+		log.Error(err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -91,6 +94,7 @@ func (h *Handler) GetSubscription(w http.ResponseWriter, r *http.Request) {
 
 	sub, err := h.SubRepo.GetById(id)
 	if err != nil {
+		log.Error(err.Error())
 		http.Error(w, "not found", http.StatusNotFound)
 		return
 	}
@@ -115,24 +119,28 @@ func (h *Handler) UpdateSubscription(w http.ResponseWriter, r *http.Request) {
 	idStr := strings.TrimPrefix(r.URL.Path, "/subscriptions/update/")
 	id, err := dto.StringToUUID(idStr)
 	if err != nil {
+		log.Error(err.Error())
 		http.Error(w, "invalid id format", http.StatusBadRequest)
 		return
 	}
 
 	var req dto.SubscriptionDTO
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		log.Error(err.Error())
 		http.Error(w, "invalid JSON", http.StatusBadRequest)
 		return
 	}
 
 	sub, err := dto.DTOToSubscription(&req)
 	if err != nil {
+		log.Error(err.Error())
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 	sub.ID = id
 
 	if err := h.SubRepo.Update(sub); err != nil {
+		log.Error(err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -153,6 +161,7 @@ func (h *Handler) DeleteSubscription(w http.ResponseWriter, r *http.Request) {
 	idStr := strings.TrimPrefix(r.URL.Path, "/subscriptions/delete/")
 	id, err := dto.StringToUUID(idStr)
 	if err != nil {
+		log.Error(err.Error())
 		http.Error(w, "invalid id format", http.StatusBadRequest)
 		return
 	}
@@ -186,6 +195,7 @@ func (h *Handler) TotalCost(w http.ResponseWriter, r *http.Request) {
 
 	total, err := h.SubRepo.TotalCost(userID, service, from, to)
 	if err != nil {
+		log.Error(err.Error())
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

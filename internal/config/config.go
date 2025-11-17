@@ -17,8 +17,8 @@ type Config struct {
 
 func Load() *Config {
 
-	_ = godotenv.Load(".env")
-
+	err := godotenv.Load(".env")
+	log.Printf("Failed to load .env file: %s", err.Error())
 	cfg := Config{
 		DB_PORT:  getEnv("DB_PORT", "5432"),
 		DB_USER:  getEnv("DB_USER", "postgres"),
