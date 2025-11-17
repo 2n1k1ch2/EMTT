@@ -1,0 +1,188 @@
+basePath: /
+definitions:
+  dto.SubscriptionDTO:
+    properties:
+      finish_date:
+        type: string
+      id:
+        type: string
+      price:
+        type: integer
+      service_name:
+        type: string
+      start_date:
+        type: string
+      user_id:
+        type: string
+    type: object
+host: localhost:8088
+info:
+  contact: {}
+  description: API for managing subscriptions
+  title: Subscription Service API
+  version: "1.0"
+paths:
+  /subscriptions/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Subscription data
+        in: body
+        name: subscription
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SubscriptionDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.SubscriptionDTO'
+        "400":
+          description: Invalid JSON
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Create subscription
+      tags:
+      - subscriptions
+  /subscriptions/delete/{id}:
+    delete:
+      parameters:
+      - description: Subscription ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Delete subscription by ID
+      tags:
+      - subscriptions
+  /subscriptions/get/{id}:
+    get:
+      parameters:
+      - description: Subscription ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.SubscriptionDTO'
+        "400":
+          description: Invalid ID
+          schema:
+            type: string
+        "404":
+          description: Not found
+          schema:
+            type: string
+      summary: Get subscription by ID
+      tags:
+      - subscriptions
+  /subscriptions/list:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.SubscriptionDTO'
+            type: array
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: List subscriptions
+      tags:
+      - subscriptions
+  /subscriptions/total:
+    get:
+      parameters:
+      - description: User ID
+        in: query
+        name: user_id
+        type: string
+      - description: Service name
+        in: query
+        name: service_name
+        type: string
+      - description: From date (YYYY-MM-DD)
+        in: query
+        name: from
+        type: string
+      - description: To date (YYYY-MM-DD)
+        in: query
+        name: to
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              format: int32
+              type: integer
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Total subscription cost
+      tags:
+      - subscriptions
+  /subscriptions/update/{id}:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Subscription ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated subscription
+        in: body
+        name: subscription
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SubscriptionDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.SubscriptionDTO'
+        "400":
+          description: Invalid JSON
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Update subscription by ID
+      tags:
+      - subscriptions
+swagger: "2.0"
